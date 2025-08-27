@@ -8,7 +8,10 @@ from nltk.tokenize import word_tokenize
 nltk_data_path = os.path.join(os.path.dirname(__file__), "nltk_data")
 # nltk.download('punkt', download_dir=nltk_data_path)
 # nltk.download('stopwords', download_dir=nltk_data_path)
-# nltk.download('punkt_tab', download_dir=nltk_data_path)
+# nltk.download('punkt_tab', download_dir=nltk_data_path)    
+nltk.download('wordnet', download_dir=nltk_data_path)    
+nltk.download('omw-1.4', download_dir=nltk_data_path) 
+nltk.download('averaged_perceptron_tagger_eng', download_dir=nltk_data_path)
 nltk.data.path.append(nltk_data_path)
 
 
@@ -34,7 +37,7 @@ class TextCleaningProcessing:
             """ Remove stop words from the text."""
             stop_words = set(stopwords.words('english'))
             tokens = word_tokenize(text.lower())
-            return " ".join([w for w in tokens if w not in stop_words])
+            return " ".join([word for word in tokens if word not in stop_words])
 
 
 
