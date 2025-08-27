@@ -33,7 +33,7 @@ class Retriever:
             for message in messages:
                 KlakfaTools.Producer.publish_message(producer=producer, topic=topic, key=None, message=message)
             
-    def split_to_topic(self, CommandCursor) -> dict:
+    def split_to_topic(self, CommandCursor:list) -> dict:
         antisemitic = [result for result in CommandCursor if result['Antisemitic'] ==1 ]
         not_antisemitic = [result for result in CommandCursor if result['Antisemitic'] ==0 ]
         return  {'antisemitic':antisemitic, 'not_antisemitic':not_antisemitic}
@@ -45,7 +45,7 @@ class Retriever:
         i = 0
         while True:
             data: CommandCursor = self.retrieve(num_records, i, col_name)
-            topics = self.split_to_topic(data)
+            topics = self.split_to_topic(list(data))
             self.publish(producer, topics)
             time.sleep(self.time_sleep)
             i += 1
