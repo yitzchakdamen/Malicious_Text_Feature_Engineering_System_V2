@@ -9,5 +9,4 @@ RUN pip install --upgrade kafka-python
 COPY . .
 COPY "../Kafka_Tools" .
 
-
-CMD ["python","/app/app/main.py"]
+CMD ["python", "-m", "app.Retriever_Service.app.main"]
