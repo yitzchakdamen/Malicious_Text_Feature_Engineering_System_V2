@@ -12,19 +12,16 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-logging.getLogger('kafka-python').setLevel(logging.WARNING)
+logging.getLogger('kafka').setLevel(logging.WARNING)
 
 def main():
     logging.info("Starting the data retrieval and publishing process ..")
     url:str = f"mongodb+srv://{config.USER}:{config.PASSWORD}@{config.DNS}"
     loader = DataLoader(url, config.DB_NAME, config.COLLECTION_NAME)
-    try:
-        retriever = Retriever(config.TIME_SLEEP, loader, config.KAFKA_BOOTSTRAP_SERVERS)
-        retriever.system_loop(num_records=config.NUM_RECORDS, col_name=config.COL_NAME_TO_SORT)
-    except Exception as e:
-        logging.error(f"An error occurred: {e}")
-    finally:
-        loader.close()
+
+    retriever = Retriever(config.TIME_SLEEP, loader, config.KAFKA_BOOTSTRAP_SERVERS)
+    retriever.system_loop(num_records=config.NUM_RECORDS, col_name=config.COL_NAME_TO_SORT)
+
 
 
 if __name__ == "__main__":
