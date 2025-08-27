@@ -36,7 +36,7 @@ class Retriever:
     def split_to_topic(self, CommandCursor:list) -> dict:
         antisemitic = [result for result in CommandCursor if result['Antisemitic'] ==1 ]
         not_antisemitic = [result for result in CommandCursor if result['Antisemitic'] ==0 ]
-        return  {'antisemitic':antisemitic, 'not_antisemitic':not_antisemitic}
+        return  {'raw_tweets_antisemitic':antisemitic, 'raw_tweets_not_antisemitic':not_antisemitic}
     
 
     def system_loop(self, num_records:int,  col_name:str):
