@@ -15,7 +15,7 @@ COLLECTION_NAME = os.getenv("COLLECTION_NAME","")
 NUM_RECORDS = int(os.getenv("NUM_RECORDS", 100))
 COL_NAME_TO_SORT = os.getenv("COL_NAME", "CreateDate")
 KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
-TIME_SLEEP = int(os.getenv("TIME_SLEEP", 50))
+TIME_SLEEP = int(os.getenv("TIME_SLEEP", 60))
 
 logger.info("Configuration Loaded:")
 logger.info(f"KAFKA_BOOTSTRAP_SERVERS: {KAFKA_BOOTSTRAP_SERVERS}")
