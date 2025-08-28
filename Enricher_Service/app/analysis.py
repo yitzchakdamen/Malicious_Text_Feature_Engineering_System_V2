@@ -29,7 +29,7 @@ class Analysis:
         return file_content.split("\n")
 
     @staticmethod
-    def weapons_detected(text: str) -> str:
+    def weapons_detected(text: str) -> list[str]:
         file_url = os.getenv( "file_url" ,"Enricher_Service/app/weapon_list.txt")
         """Detect weapons mentioned in the text."""
-        return " ".join([weapon for weapon in Analysis.get_list_of_weapons(file_url) if weapon in text.split(" ")])
+        return [weapon for weapon in Analysis.get_list_of_weapons(file_url) if weapon in text.split(" ")]
