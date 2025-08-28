@@ -18,5 +18,5 @@ class Persister:
         
         for message in self.consumer:
             logger.info(f"Received message: {message.value}: {message.topic}")
-            loader.insert(message.value, message.topic[23:])
-            logger.info(f" ----- Inserted message into MongoDB ----")
+            loader.insert(message.value, message.topic[22:])
+            logger.info(f" ----- Inserted message into MongoDB to collection: {message.topic[22:]} ----")

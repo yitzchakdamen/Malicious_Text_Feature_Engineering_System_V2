@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: preprocessor-service
+spec:
+  selector:
+    app: preprocessor-service
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preprocessor-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: preprocessor-service
+  template:
+    metadata:
+      labels:
+        app: preprocessor-service
+    spec:
+      containers:
+        - name: preprocessor-service
+          image: yitzchakdamen/preprocessor-service:latest
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-broker:9092"
+            - name: COL_NAME_TO_PROCESS
+              value: "text"
+            - name: NEW_COL_NAME
+              value: "clean_text"
+            - name: TOPIC_A
+              value: "raw_tweets_antisemitic"
+            - name: TOPIC_B
+              value: "raw_tweets_not_antisemitic"
+            - name: DNS
+              value: "cluster0.6ycjkak.mongodb.net/"
+            - name: KAFKA_GROUP_ID
+              value: "group_Preprocessor"

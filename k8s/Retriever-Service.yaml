@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: retriever-service
+spec:
+  selector:
+    app: retriever-service
+  ports:
+    - protocol: TCP
+      port: 8004
+      targetPort: 8004
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: retriever-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: retriever-service
+  template:
+    metadata:
+      labels:
+        app: retriever-service
+    spec:
+      containers:
+        - name: retriever-service
+          image: yitzchakdamen/retriever-service:latest
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-broker:9092"
+            - name: USER
+              value: "IRGC_NEW"
+            - name: PASS
+              value: "iran135"
+            - name: DB_NAME
+              value: "IranMalDB"
+            - name: DNS
+              value: "cluster0.6ycjkak.mongodb.net/"
+            - name: COLLECTION_NAME
+              value: "tweets"
+            - name: NUM_RECORDS
+              value: "100"
+            - name: COL_NAME_TO_SORT
+              value: "CreateDate"
+            - name: TIME_SLEEP
+              value: "60"

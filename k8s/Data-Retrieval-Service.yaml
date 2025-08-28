@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-retrieval-service
+spec:
+  selector:
+    app: data-retrieval-service
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-retrieval-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-retrieval-service
+  template:
+    metadata:
+      labels:
+        app: data-retrieval-service
+    spec:
+      containers:
+        - name: data-retrieval-service
+          image: yitzchakdamen/data-retrieval-service:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: HOST
+              value: "mongodb-tweets-db"
+            - name: PORT
+              value: "27017"
+            - name: DB_NAME
+              value: "tweets_db"
+            - name: USER
+              value: ""
+            - name: PASSWORD
+              value: ""
+            - name: APP_HOST
+              value: "0.0.0.0"
+            - name: APP_PORT
+              value: "8000"
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: data-retrieval-route
+spec:
+  to:
+    kind: Service
+    name: data-retrieval-service
+  port:
+    targetPort: 8000
