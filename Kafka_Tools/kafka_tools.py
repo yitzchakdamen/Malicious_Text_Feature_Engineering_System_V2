@@ -44,14 +44,5 @@ class KlakfaTools:
                 group_id=group_id,
                 value_deserializer=lambda m: json.loads(m.decode('utf-8')),
                 bootstrap_servers=[bootstrap_servers],
-                # consumer_timeout_ms=10000,
                 auto_offset_reset='earliest'
             )
-
-        @staticmethod
-        def get_consumer_events( *functions, consumer: KafkaConsumer) -> None:
-            """Process incoming Kafka messages."""
-            logger.info("Listening to Kafka messages ..")
-            for message in consumer:
-                for function in functions:
-                    function(message)

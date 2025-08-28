@@ -16,7 +16,7 @@ logging.getLogger('kafka').setLevel(logging.WARNING)
 def main():
     logging.info("Starting the Retriever ..")
     retriever = Retriever(config.TOPIC_A, config.TOPIC_B, bootstrap_servers=config.KAFKA_BOOTSTRAP_SERVERS, group_id=config.KAFKA_GROUP_ID)
-    retriever.system_loop(col_name=config.COL_NAME_TO_PROCESS, new_col_name=None)
+    retriever.system_loop(col_name=config.COL_NAME_TO_PROCESS)
 
 
 

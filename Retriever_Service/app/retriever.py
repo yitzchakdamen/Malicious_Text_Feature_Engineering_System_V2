@@ -24,11 +24,11 @@ class Retriever:
         ]
             
     def split_to_topic(self, CommandCursor:list) -> dict:
+        """Split the retrieved data into different topics."""
         antisemitic = [result for result in CommandCursor if result['Antisemitic'] ==1 ]
         not_antisemitic = [result for result in CommandCursor if result['Antisemitic'] ==0 ]
         return  {'raw_tweets_antisemitic':antisemitic, 'raw_tweets_not_antisemitic':not_antisemitic}
     
-
     def system_loop(self, num_records:int,  col_name:str):
         """System loop for retrieving and publishing data."""
         producer = KlakfaTools.Producer.get_producer(self.bootstrap_servers)

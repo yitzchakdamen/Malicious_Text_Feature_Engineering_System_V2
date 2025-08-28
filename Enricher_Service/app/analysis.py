@@ -3,28 +3,16 @@ from Text_cleaned_and_processed.Text_cleaned_and_processed import TextCleaningPr
 import os
 from dateutil.parser import parse
 from datetime import datetime
+import re
 
 class Analysis:
 
     @staticmethod
-    def is_date(string, fuzzy=False):
-        """ Return whether the string can be interpreted as a date."""
-        try: 
-            parse(string, fuzzy=fuzzy)
-            return True
-        except (ValueError, OverflowError):
-            return False
-    
-    @staticmethod
     def latest_timestamp(text:str) -> str:
         """Find the latest timestamp in a given text."""
-        dates = []
-        try:
-            for word in text.split():
-                if Analysis.is_date(word): dates.append(datetime.strptime(word, '%Y-%m-%d'))
-        except (ValueError, OverflowError):
-            pass
-        return max(dates).strftime('%Y-%m-%d') if dates else ""
+        matches = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", text)
+        if matches: return max([datetime.strptime(m, "%Y-%m-%d") for m in matches]).strftime("%Y-%m-%d")
+        else: return ""
 
     @staticmethod
     def analyze_sentiment(tweet: str) -> float:
@@ -48,6 +36,6 @@ class Analysis:
 
     @staticmethod
     def weapons_detected(text: str) -> list[str]:
-        file_url = os.getenv( "file_url" ,"Enricher_Service/app/weapon_list.txt")
         """Detect weapons mentioned in the text."""
+        file_url = os.getenv( "file_url" ,"Enricher_Service/app/weapon_list.txt")
         return [weapon for weapon in Analysis.get_list_of_weapons(file_url) if weapon in text.split(" ")]

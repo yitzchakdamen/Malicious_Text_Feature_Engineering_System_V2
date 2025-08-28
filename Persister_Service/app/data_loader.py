@@ -6,12 +6,12 @@ from pymongo.command_cursor import CommandCursor
 class DataLoader:
 
     def __init__(self, client_string:str, database:str):
-        self.client: Database = MongoClient(client_string)[database]
-        
+        self.client: MongoClient = MongoClient(client_string)
+        self.db:Database = self.client[database]
 
     def insert(self,  documents:dict, collection_name:str) -> bool:
         """Insert data into the specified collection."""
-        collection: Collection = self.client[collection_name]
+        collection: Collection = self.db[collection_name]
         return collection.insert_one(documents).acknowledged
 
     def close(self):

@@ -6,8 +6,9 @@ from pymongo.command_cursor import CommandCursor
 class DataLoader:
 
     def __init__(self, client_string:str, database:str, collection:str):
-        self.client: Database = MongoClient(client_string)[database]
-        self.collection: Collection = self.client[collection]
+        self.client: MongoClient = MongoClient(client_string)
+        self.db:Database = self.client[database]
+        self.collection: Collection = self.db[collection]
 
     def retrieve(self,  pipeline:list[dict]) -> CommandCursor:
         """Get data from the specified collection."""
