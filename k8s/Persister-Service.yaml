@@ -45,5 +45,3 @@ spec:
               value: "27017"
             - name: DB_NAME
               value: "tweets_db"
-
-              
