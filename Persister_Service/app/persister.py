@@ -13,7 +13,7 @@ class Persister:
 
 
     def system_loop(self, loader:DataLoader):
-        """ Listen for messages and process them """
+        """ Listen for messages and insert them into MongoDB """
         logger.info("Starting system loop.")
         
         for message in self.consumer:

@@ -5,9 +5,6 @@ import logging
 import os
 import sys
 
-
-
-
 current_file_path = os.path.abspath(__file__)
 current_dir = os.path.dirname(current_file_path)
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
@@ -17,6 +14,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 logging.getLogger('kafka').setLevel(logging.WARNING)
 
 def main():
+    """Main entry point for the Persister service."""
     logging.info("Starting the Persister ..")
     
     logging.info("Starting the data retrieval and publishing process ..")
