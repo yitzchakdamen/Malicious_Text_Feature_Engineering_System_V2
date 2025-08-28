@@ -1,21 +1,25 @@
-docker network create KafkaNewsStream20
-
-docker stop kafka-broker
-docker rm kafka-broker
+@REM ---- Preprocessor_Service ----
 
 cd C:\Users\isaac\source\repos\Malicious_Text_Feature_Engineering_System_V2
-python -m Preprocessor_Service.app.main
+docker build -t preprocessor-service -f Preprocessor_Service/Dockerfile .
 
-docker build -t app-subscribers .
+docker network create Week_11_Kafka_Malicious_Text
 
-docker run -d --name app-subscribers-1 ^
-    -e APP_SUB_HOST=0.0.0.0 ^
-    -e APP_SUB_PORT=8001 ^
+docker stop preprocessor-service
+docker rm preprocessor-service
+
+docker run -d --name preprocessor-service ^
     -e KAFKA_BOOTSTRAP_SERVERS=kafka-broker:9092 ^
-    -e KAFKA_TOPIC=interesting_news ^
-    -e MONGO_HOST=mongodb-NewsStream20 ^
-    -e MONGO_PORT=27017 ^
-    -e MONGO_DATABASE=NewsStream20Public ^
-    -e GROUP=group_interesting_news_1 ^
-    --network KafkaNewsStream20 ^
-    -p 8001:8001 app-subscribers
+    -e COL_NAME_TO_PROCESS=text ^
+    -e NEW_COL_NAME=clean_text ^
+    -e TOPIC_A=raw_tweets_antisemitic ^
+    -e TOPIC_B=raw_tweets_not_antisemitic ^
+    -e DNS=cluster0.6ycjkak.mongodb.net/ ^
+    -e KAFKA_GROUP_ID=group_Preprocessor ^
+    --network Week_11_Kafka_Malicious_Text ^
+    preprocessor-service:latest
+
+
+docker login
+docker tag preprocessor-service:latest yitzchakdamen/preprocessor-service:latest
+docker push yitzchakdamen/preprocessor-service:latest

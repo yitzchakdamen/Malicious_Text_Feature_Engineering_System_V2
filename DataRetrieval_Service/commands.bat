@@ -1,23 +1,25 @@
-docker network create KafkaNewsStream20
-
-docker stop kafka-broker
-docker rm kafka-broker
-
+@REM ---- Enricher_Service ----
 
 cd C:\Users\isaac\source\repos\Malicious_Text_Feature_Engineering_System_V2
-python -m DataRetrieval_Service.app.main
+docker build -t data-retrieval-service -f DataRetrieval_Service/Dockerfile .
 
+docker network create Week_11_Kafka_Malicious_Text
 
-docker build -t app-subscribers .
+docker stop data-retrieval-service
+docker rm data-retrieval-service
 
-docker run -d --name app-subscribers-1 ^
-    -e APP_SUB_HOST=0.0.0.0 ^
-    -e APP_SUB_PORT=8001 ^
-    -e KAFKA_BOOTSTRAP_SERVERS=kafka-broker:9092 ^
-    -e KAFKA_TOPIC=interesting_news ^
-    -e MONGO_HOST=mongodb-NewsStream20 ^
-    -e MONGO_PORT=27017 ^
-    -e MONGO_DATABASE=NewsStream20Public ^
-    -e GROUP=group_interesting_news_1 ^
-    --network KafkaNewsStream20 ^
-    -p 8001:8001 app-subscribers
+docker run -d --name data-retrieval-service ^
+    -e HOST=mongodb-tweets_db ^
+    -e PORT=27017 ^
+    -e DB_NAME=tweets_db ^
+    -e USER= ^
+    -e PASSWORD= ^
+    -e APP_HOST=0.0.0.0 ^
+    -e APP_PORT=8000 ^
+    --network Week_11_Kafka_Malicious_Text ^
+    -p 8000:8000 ^
+    data-retrieval-service:latest
+
+docker login
+docker tag data-retrieval-service:latest yitzchakdamen/data-retrieval-service:latest
+docker push yitzchakdamen/data-retrieval-service:latest

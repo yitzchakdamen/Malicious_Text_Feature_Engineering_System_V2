@@ -2,14 +2,16 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+
+COPY Enricher_Service/requirements.txt .
 RUN pip install -r requirements.txt
-RUN pip install --upgrade kafka-python
 
 ENV NLTK_DATA=/usr/local/share/nltk_data
 RUN python -m nltk.downloader -d /usr/local/share/nltk_data vader_lexicon
 
-COPY . app/Retriever_Service
-COPY C:\Users\isaac\source\repos\Malicious_Text_Feature_Engineering_System_V2\Kafka_Tools /app/Kafka_Tools
+COPY Kafka_Tools /app/Kafka_Tools
+COPY Text_cleaned_and_processed /app/Text_cleaned_and_processed
 
-CMD ["python", "-m", "app.Retriever_Service.app.main"]
+COPY Enricher_Service /app/Enricher_Service
+
+CMD ["python", "-m", "Enricher_Service.app.main"]
