@@ -14,24 +14,33 @@ class KlakfaTools:
             logger.info("Creating producer object ..")
             return KafkaProducer(
                 bootstrap_servers=[bootstrap_servers],
-                value_serializer=lambda x: json.dumps(str(x)).encode('utf-8')
+                value_serializer=lambda x: json.dumps(x, default=lambda x: str(x)).encode('utf-8')
                 )
         
         @staticmethod
-        def publish_message(producer:KafkaProducer,  topic, key, message):
+        def publish_message(producer:KafkaProducer,  topic, message, key=None):
             """Publish a message to a Kafka topic."""
             logger.info(f"Publish messages with key: {str(key)}, to topic: {str(topic)}")
             producer.send(topic, key=key, value=message)
             producer.flush()
+        
+        @staticmethod
+        def publish_many_by_topics(producer:KafkaProducer, topics:dict[str,str]):
+            """Publish data to Kafka."""
+            logger.info("Publishing data to Kafka ..")
+            
+            for topic, messages in topics.items():
+                for message in messages:
+                    KlakfaTools.Producer.publish_message(producer=producer, topic=topic, key=None, message=message)
     
     class Consumer:
         
         @staticmethod
-        def get_consumer(bootstrap_servers ,topic:str, group_id:str) -> KafkaConsumer:
+        def get_consumer(topic, bootstrap_servers:str, group_id:str) -> KafkaConsumer:
             """Create a Kafka consumer."""
             logger.info("Creating Consumer Object ..")
             return KafkaConsumer(
-                topic,
+                *topic,
                 group_id=group_id,
                 value_deserializer=lambda m: json.loads(m.decode('utf-8')),
                 bootstrap_servers=[bootstrap_servers],
@@ -40,10 +49,9 @@ class KlakfaTools:
             )
 
         @staticmethod
-        def get_consumer_events(consumer: KafkaConsumer, function) -> None:
+        def get_consumer_events( *functions, consumer: KafkaConsumer) -> None:
             """Process incoming Kafka messages."""
             logger.info("Listening to Kafka messages ..")
             for message in consumer:
-                function(message)
-                
-                
+                for function in functions:
+                    function(message)
