@@ -19,5 +19,6 @@ def main():
     retriever.system_loop(col_name=config.COL_NAME_TO_PROCESS, new_col_name=None)
 
 
+
 if __name__ == "__main__":
     main()
