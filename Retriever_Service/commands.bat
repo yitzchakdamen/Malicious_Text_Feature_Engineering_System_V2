@@ -1,16 +1,15 @@
-docker network create KafkaNewsStream20
 
-docker stop kafka-broker
-docker rm kafka-broker
+@REM ---- retriever-service ----
 
+docker network create Week_11_Kafka_Malicious_Text
+
+docker stop retriever-service
+docker rm retriever-service
 
 cd C:\Users\isaac\source\repos\Malicious_Text_Feature_Engineering_System_V2
-python -m Retriever_Service.app.main
+docker build -t retriever-service -f Retriever_Service/Dockerfile .
 
-
-docker build -t app-subscribers .
-
-docker run -d --name app-subscribers-1 ^
+docker run -d --name retriever-service ^
     -e APP_SUB_HOST=0.0.0.0 ^
     -e APP_SUB_PORT=8001 ^
     -e KAFKA_BOOTSTRAP_SERVERS=kafka-broker:9092 ^
@@ -19,5 +18,5 @@ docker run -d --name app-subscribers-1 ^
     -e MONGO_PORT=27017 ^
     -e MONGO_DATABASE=NewsStream20Public ^
     -e GROUP=group_interesting_news_1 ^
-    --network KafkaNewsStream20 ^
-    -p 8001:8001 app-subscribers
+    --network Week_11_Kafka_Malicious_Text ^
+    retriever-service:latest
