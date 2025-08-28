@@ -1,5 +1,5 @@
-from Preprocessor_Service.app.config import config
-from Preprocessor_Service.app.preprocessor import Preprocessor
+from Enricher_Service.app.config import config
+from Enricher_Service.app.retriever import Retriever
 import logging
 import os
 import sys
@@ -14,9 +14,9 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 logging.getLogger('kafka').setLevel(logging.WARNING)
 
 def main():
-    logging.info("Starting the Preprocessor ..")
-    preprocessor = Preprocessor(config.TOPIC_A, config.TOPIC_B, bootstrap_servers=config.KAFKA_BOOTSTRAP_SERVERS, group_id=config.KAFKA_GROUP_ID)
-    preprocessor.system_loop(col_name=config.COL_NAME_TO_PROCESS, new_col_name=config.NEW_COL_NAME)
+    logging.info("Starting the Retriever ..")
+    retriever = Retriever(config.TOPIC_A, config.TOPIC_B, bootstrap_servers=config.KAFKA_BOOTSTRAP_SERVERS, group_id=config.KAFKA_GROUP_ID)
+    retriever.system_loop(col_name=config.COL_NAME_TO_PROCESS, new_col_name=None)
 
 
 if __name__ == "__main__":

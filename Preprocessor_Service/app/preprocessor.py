@@ -34,9 +34,9 @@ class Preprocessor:
         
         for message in self.consumer:
             logger.info(f"Received message: {message.value}: {message.topic}")
-
+            
             message = self.adding_content(message, col_name, new_col_name)
-            KlakfaTools.Producer.publish_message(producer, topic=f"preprocessed_{message.topic[4:]}", message=message)
+            KlakfaTools.Producer.publish_message(producer, topic=f"preprocessed_{message.topic[4:]}", message=message.value)
             
             logger.info(f"Published processed message to topic: preprocessed_{message.topic[4:]}")
 

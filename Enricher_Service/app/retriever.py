@@ -6,7 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class Preprocessor:
+class Retriever:
     
     def __init__(self, *topic, bootstrap_servers:str, group_id:str) -> None:
         self.bootstrap_servers = bootstrap_servers
@@ -36,10 +36,10 @@ class Preprocessor:
         producer:KafkaProducer = KlakfaTools.Producer.get_producer(self.bootstrap_servers)
         
         for message in self.consumer:
+            logger.info(message)
             logger.info(f"Received message: {message.value}: {message.topic}")
-
+            
             message = self.adding_content(message, col_name, new_col_name)
-            KlakfaTools.Producer.publish_message(producer, topic=f"enriched_{message.topic[4:]}", message=message)
+            KlakfaTools.Producer.publish_message(producer, topic=f"enriched_{message.topic[4:]}", message=message.value)
 
             logger.info(f"Published processed message to topic: enriched_{message.topic[4:]}")
-
