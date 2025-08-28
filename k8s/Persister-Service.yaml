@@ -1,0 +1,49 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: persister-service
+spec:
+  selector:
+    app: persister-service
+  ports:
+    - protocol: TCP
+      port: 8003
+      targetPort: 8003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: persister-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: persister-service
+  template:
+    metadata:
+      labels:
+        app: persister-service
+    spec:
+      containers:
+        - name: persister-service
+          image: yitzchakdamen/persister-service:latest
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-broker:9092"
+            - name: COL_NAME_TO_PROCESS
+              value: "clean_text"
+            - name: TOPIC_A
+              value: "enriched_preprocessed_tweets_antisemitic"
+            - name: TOPIC_B
+              value: "enriched_preprocessed_tweets_not_antisemitic"
+            - name: KAFKA_GROUP_ID
+              value: "group_Persister"
+            - name: HOST
+              value: "mongodb-tweets-db"
+            - name: PORT
+              value: "27017"
+            - name: DB_NAME
+              value: "tweets_db"
+
+              

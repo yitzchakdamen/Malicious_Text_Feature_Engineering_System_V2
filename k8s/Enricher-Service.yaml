@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: enricher-service
+spec:
+  selector:
+    app: enricher-service
+  ports:
+    - protocol: TCP
+      port: 8002
+      targetPort: 8002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enricher-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enricher-service
+  template:
+    metadata:
+      labels:
+        app: enricher-service
+    spec:
+      containers:
+        - name: enricher-service
+          image: yitzchakdamen/enricher-service:latest
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-broker:9092"
+            - name: COL_NAME_TO_PROCESS
+              value: "clean_text"
+            - name: TOPIC_A
+              value: "preprocessed_tweets_antisemitic"
+            - name: TOPIC_B
+              value: "preprocessed_tweets_not_antisemitic"
+            - name: KAFKA_GROUP_ID
+              value: "group_Enricher"

@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-tweets-db
+spec:
+  selector:
+    app: mongodb-tweets-db
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-tweets-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-tweets-db
+  template:
+    metadata:
+      labels:
+        app: mongodb-tweets-db
+    spec:
+      containers:
+        - name: mongodb
+          image: mongodb/mongodb-community-server
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-storage
+      volumes:
+        - name: mongodb-storage
+          persistentVolumeClaim:
+            claimName: mongodb-pvc

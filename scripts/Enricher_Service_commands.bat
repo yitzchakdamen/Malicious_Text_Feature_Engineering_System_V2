@@ -20,5 +20,3 @@ docker run -d --name enricher-service ^
 docker login
 docker tag enricher-service:latest yitzchakdamen/enricher-service:latest
 docker push yitzchakdamen/enricher-service:latest
-
-docker 
