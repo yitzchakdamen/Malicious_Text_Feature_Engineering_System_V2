@@ -40,6 +40,6 @@ class Retriever:
             logger.info(f"Received message: {message.value}: {message.topic}")
             
             message = self.adding_content(message, col_name, new_col_name)
-            KlakfaTools.Producer.publish_message(producer, topic=f"enriched_{message.topic[4:]}", message=message.value)
+            KlakfaTools.Producer.publish_message(producer, topic=f"enriched_{message.topic}", message=message.value)
 
-            logger.info(f"Published processed message to topic: enriched_{message.topic[4:]}")
+            logger.info(f"Published processed message to topic: enriched_{message.topic}")

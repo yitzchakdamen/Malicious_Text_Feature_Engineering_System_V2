@@ -4,7 +4,8 @@ docker stop kafka-broker
 docker rm kafka-broker
 
 
-python -m Retriever_Service.app.main
+cd C:\Users\isaac\source\repos\Malicious_Text_Feature_Engineering_System_V2
+python -m Enricher_Service.app.main
 
 
 docker build -t app-subscribers .
