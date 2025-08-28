@@ -50,7 +50,15 @@ class TextCleaningProcessing:
         tokens = word_tokenize(text)
         return " ".join([lemmatizer.lemmatize(word) for word in tokens])
 
-
+    @staticmethod
+    def full_processing(text:str):
+        """ Perform full text processing."""
+        text = TextCleaningProcessing.to_lowercase(text)
+        text = TextCleaningProcessing.removing_punctuation_marks(text)
+        text = TextCleaningProcessing.removing_unnecessary_whitespace(text)
+        text = TextCleaningProcessing.removing_stop_words(text)
+        text = TextCleaningProcessing.Lemmatization(text)
+        return text
 
 
 

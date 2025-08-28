@@ -1,9 +1,10 @@
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from Text_cleaned_and_processed.Text_cleaned_and_processed import TextCleaningProcessing
 import os
 
 
 class Analysis:
-        
+
     @staticmethod
     def latest_timestamp(word:str) -> str:
         """Find the latest timestamp in a given text."""
@@ -26,7 +27,8 @@ class Analysis:
         """Get a list of weapons from a file."""
         with open(file_url, "r", encoding="utf-8") as f:
             file_content = f.read()
-        return file_content.split("\n")
+        processed_content = TextCleaningProcessing.full_processing(file_content)
+        return processed_content.split("\n")
 
     @staticmethod
     def weapons_detected(text: str) -> list[str]:
