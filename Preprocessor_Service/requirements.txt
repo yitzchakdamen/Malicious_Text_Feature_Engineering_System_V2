@@ -1,3 +1,4 @@
 dotenv
 kafka-python
 pymongo
+nltk

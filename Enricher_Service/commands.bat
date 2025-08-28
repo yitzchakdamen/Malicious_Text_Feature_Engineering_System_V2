@@ -1,23 +1,24 @@
-docker network create KafkaNewsStream20
-
-docker stop kafka-broker
-docker rm kafka-broker
-
+@REM ---- Enricher_Service ----
 
 cd C:\Users\isaac\source\repos\Malicious_Text_Feature_Engineering_System_V2
-python -m Enricher_Service.app.main
+docker build -t enricher-service -f Enricher_Service/Dockerfile .
 
+docker network create Week_11_Kafka_Malicious_Text
 
-docker build -t app-subscribers .
+docker stop enricher-service
+docker rm enricher-service
 
-docker run -d --name app-subscribers-1 ^
-    -e APP_SUB_HOST=0.0.0.0 ^
-    -e APP_SUB_PORT=8001 ^
+docker run -d --name enricher-service ^
     -e KAFKA_BOOTSTRAP_SERVERS=kafka-broker:9092 ^
-    -e KAFKA_TOPIC=interesting_news ^
-    -e MONGO_HOST=mongodb-NewsStream20 ^
-    -e MONGO_PORT=27017 ^
-    -e MONGO_DATABASE=NewsStream20Public ^
-    -e GROUP=group_interesting_news_1 ^
-    --network KafkaNewsStream20 ^
-    -p 8001:8001 app-subscribers
+    -e COL_NAME_TO_PROCESS=clean_text ^
+    -e TOPIC_A=preprocessed_tweets_antisemitic ^
+    -e TOPIC_B=preprocessed_tweets_not_antisemitic ^
+    -e KAFKA_GROUP_ID=group_Enricher ^
+    --network Week_11_Kafka_Malicious_Text ^
+    enricher-service:latest
+
+docker login
+docker tag enricher-service:latest yitzchakdamen/enricher-service:latest
+docker push yitzchakdamen/enricher-service:latest
+
+docker 

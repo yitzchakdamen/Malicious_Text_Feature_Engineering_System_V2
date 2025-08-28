@@ -1,3 +1,4 @@
 dotenv
 kafka-python
 nltk
+python-dateutil

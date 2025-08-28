@@ -12,13 +12,18 @@ class Analysis:
         try: 
             parse(string, fuzzy=fuzzy)
             return True
-        except ValueError:
+        except (ValueError, OverflowError):
             return False
     
     @staticmethod
     def latest_timestamp(text:str) -> str:
         """Find the latest timestamp in a given text."""
-        dates = [datetime.strptime(word, '%Y-%m-%d') for word in text.split() if Analysis.is_date(word)]
+        dates = []
+        try:
+            for word in text.split():
+                if Analysis.is_date(word): dates.append(datetime.strptime(word, '%Y-%m-%d'))
+        except (ValueError, OverflowError):
+            pass
         return max(dates).strftime('%Y-%m-%d') if dates else ""
 
     @staticmethod

@@ -12,20 +12,10 @@ class Retriever:
         self.bootstrap_servers = bootstrap_servers
         self.consumer:KafkaConsumer = KlakfaTools.Consumer.get_consumer(topic, bootstrap_servers=bootstrap_servers, group_id=group_id)
     
-    # def processing(self, text):
-    #     """ Clean and process the input text """
-    #     logger.info("Starting text cleaning and processing.")
-    #     text = TextCleaningProcessing.to_lowercase(text)
-    #     text = TextCleaningProcessing.removing_punctuation_marks(text)
-    #     text = TextCleaningProcessing.removing_unnecessary_whitespace(text)
-    #     text = TextCleaningProcessing.removing_stop_words(text)
-    #     text = TextCleaningProcessing.Lemmatization(text)
-    #     return text
-    
 
     def adding_content(self, message, col_name:str, new_col_name):
         message.value["sentiment"] = Analysis.sentiment_category(Analysis.analyze_sentiment(message.value[col_name]))
-        message.value["weapons_detected"] = Analysis.weapons_detected(message.value[col_name])
+        message.value["weapons_detected"] = Analysis.weapons_detected(message.value["text"])
         message.value["relevant_timestamp"] = Analysis.latest_timestamp(message.value[col_name])
         return message
 
