@@ -1,14 +1,25 @@
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from Text_cleaned_and_processed.Text_cleaned_and_processed import TextCleaningProcessing
 import os
-
+from dateutil.parser import parse
+from datetime import datetime
 
 class Analysis:
 
     @staticmethod
-    def latest_timestamp(word:str) -> str:
+    def is_date(string, fuzzy=False):
+        """ Return whether the string can be interpreted as a date."""
+        try: 
+            parse(string, fuzzy=fuzzy)
+            return True
+        except ValueError:
+            return False
+    
+    @staticmethod
+    def latest_timestamp(text:str) -> str:
         """Find the latest timestamp in a given text."""
-        return ""
+        dates = [datetime.strptime(word, '%Y-%m-%d') for word in text.split() if Analysis.is_date(word)]
+        return max(dates).strftime('%Y-%m-%d') if dates else ""
 
     @staticmethod
     def analyze_sentiment(tweet: str) -> float:
@@ -18,7 +29,7 @@ class Analysis:
     @staticmethod
     def sentiment_category(num:float) -> str:
         """Categorize the sentiment score."""
-        if num <= 0.5: return "Positive"
+        if num >= 0.5: return "Positive"
         elif num < 0.5 and num > -0.5: return "Neutral"
         else: return "Negative"
 
