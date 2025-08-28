@@ -9,7 +9,7 @@ class DataLoader:
         self.client: Database = MongoClient(client_string)[database]
         self.collection: Collection = self.client[collection]
 
-    def get_data(self,  pipeline:list[dict]) -> CommandCursor:
+    def retrieve(self,  pipeline:list[dict]) -> CommandCursor:
         """Get data from the specified collection."""
         return self.collection.aggregate(pipeline)
 
